@@ -37,7 +37,6 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default async function Home() {
   const restaurants = await fetchRestaurantes();
-  console.log(restaurants);
 
   return (
     <main>
