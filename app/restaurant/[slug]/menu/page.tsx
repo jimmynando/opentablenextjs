@@ -1,4 +1,4 @@
-import { Item, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import RestaurantNavBar from "../components/RestaurantNavBar";
 import Menu from "../components/Menu";
@@ -18,13 +18,17 @@ const fetchRestaurantMenu = async (slug: string) => {
   return restaurant.items;
 };
 
-const RestaurantMenu = async ({ params: { slug } }: { params: { slug: string } }) => {
+const RestaurantMenu = async ({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) => {
   const menu = await fetchRestaurantMenu(slug);
 
   return (
     <div className="bg-white w-[100%] rounded p-3 shadow">
       <RestaurantNavBar slug={slug} />
-      <Menu items={menu}  />
+      <Menu items={menu} />
     </div>
   );
 };

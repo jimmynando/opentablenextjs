@@ -8,8 +8,11 @@ export default function SearchBar() {
   const router = useRouter();
 
   const searchHandler = () => {
-    if (location === "banana") return;
-    router.push("/search");
+    if (location === "") return;
+
+    router.push(`/search?search=${location.toLowerCase()}`);
+
+    setLocation("");
   };
 
   return (
