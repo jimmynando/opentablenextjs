@@ -10,7 +10,7 @@ export default function SearchBar() {
   const searchHandler = () => {
     if (location === "") return;
 
-    router.push(`/search?search=${location.toLowerCase()}`);
+    router.push(`/search?city=${location.toLowerCase()}`);
 
     setLocation("");
   };
