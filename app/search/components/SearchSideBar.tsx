@@ -14,16 +14,19 @@ export default function SearchSideBar({
 }: Props) {
   const prices = [
     {
+      id: 1,
       price: PRICE.CHEAP,
       label: "$",
       className: "border w-full text-reg font-light text-center rounded-l p-2",
     },
     {
+      id: 2,
       price: PRICE.REGULAR,
       label: "$$",
       className: "border w-full text-reg font-light text-center p-2",
     },
     {
+      id: 3,
       price: PRICE.EXPENSIVE,
       label: "$$$",
       className: "border w-full text-reg font-light text-center rounded-r p-2",
@@ -65,14 +68,14 @@ export default function SearchSideBar({
       <div className="mt-3 pb-4">
         <h1 className="mb-2">Price</h1>
         <div className="flex">
-          {prices.map(({ price, label, className }) => (
+          {prices.map(({ id, price, label, className }) => (
             <Link
               href={{
                 pathname: "/search",
                 query: { ...searchParams, price },
               }}
               className={className}
-              key={price}
+              key={id}
             >
               {label}
             </Link>
