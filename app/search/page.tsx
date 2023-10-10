@@ -1,7 +1,7 @@
 import Header from "./components/Header";
 import SearchSideBar from "./components/SearchSideBar";
 import RestaurantCard from "./components/RestaurantCard";
-import { Cuisine, PrismaClient, Location, PRICE } from "@prisma/client";
+import { Cuisine, PrismaClient, Location, PRICE, Review } from "@prisma/client";
 
 interface SearchParams {
   city?: string;
@@ -16,6 +16,7 @@ export interface Restaurant {
   location: Location;
   price: PRICE;
   slug: string;
+  reviews: Review[];
 }
 
 const prisma = new PrismaClient();
@@ -34,6 +35,7 @@ const fetchRestaurantsByCity = async ({
       location: true,
       price: true,
       slug: true,
+      reviews: true,
     },
     where: {
       location: { name: { contains: city } },

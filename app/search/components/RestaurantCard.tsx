@@ -1,3 +1,4 @@
+import { renderRatingLabel } from "../../../utils/reviews";
 import Price from "../../components/Price";
 import { Restaurant } from "../page";
 import Link from "next/link";
@@ -16,7 +17,9 @@ export default function RestaurantCard(props: Props) {
         <h2 className="text-3xl">{restaurant.name}</h2>
         <div className="flex items-start">
           <div className="flex mb-2">*****</div>
-          <p className="ml-2 text-sm">Awesome</p>
+          <p className="ml-2 text-sm">
+            {renderRatingLabel(restaurant.reviews)}
+          </p>
         </div>
         <div className="mb-9">
           <div className="font-light flex text-reg">
