@@ -2,7 +2,7 @@ import React from "react";
 import { Review } from "@prisma/client";
 
 import { calculateReviewRatingAverage } from "../../../../utils/reviews";
-import StarsComponent from "./Stars";
+import StarsComponent from "../../../components/Stars";
 
 export default function Rating({ reviews }: { reviews: Review[] }) {
   const ratingAverage = calculateReviewRatingAverage(reviews);

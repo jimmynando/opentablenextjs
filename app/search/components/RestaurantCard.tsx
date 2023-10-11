@@ -1,8 +1,9 @@
-import { renderRatingLabel } from "../../../utils/reviews";
-import Price from "../../components/Price";
-import Stars from "../../restaurant/[slug]/components/Stars";
-import { Restaurant } from "../page";
 import Link from "next/link";
+
+import { Restaurant } from "../page";
+import Price from "../../components/Price";
+import Stars from "../../components/Stars";
+import { renderRatingLabel } from "../../../utils/reviews";
 
 type Props = {
   restaurant: Restaurant;

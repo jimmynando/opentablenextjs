@@ -3,11 +3,10 @@ import React from "react";
 import { Review } from "@prisma/client";
 import Image from "next/image";
 
-import emptyStar from "../../../assets/empty-star.png";
-import errorStar from "../../../assets/error.png";
-import fullStar from "../../../assets/full-star.png";
-import halfStar from "../../../assets/half-star.png";
-import { calculateReviewRatingAverage } from "../../../../utils/reviews";
+import emptyStar from "../../public/icons/empty-star.png";
+import fullStar from "../../public/icons/full-star.png";
+import halfStar from "../../public/icons/half-star.png";
+import { calculateReviewRatingAverage } from "../../utils/reviews";
 
 export default function Stars({ reviews, rating }: { reviews: Review[], rating?: number }) {
   const reviewRating = rating || calculateReviewRatingAverage(reviews);

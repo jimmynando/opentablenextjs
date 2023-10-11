@@ -1,6 +1,7 @@
 import { Review } from "@prisma/client";
 import React from "react";
-import Stars from "./Stars";
+
+import Stars from "../../../components/Stars";
 
 export default function ReviewCard({ review }: { review: Review }) {
   return (

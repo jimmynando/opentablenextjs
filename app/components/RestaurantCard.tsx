@@ -3,7 +3,7 @@ import React from "react";
 
 import { RestaurantCardType } from "../page";
 import Price from "./Price";
-import Stars from "../restaurant/[slug]/components/Stars";
+import Stars from "./Stars";
 
 interface Props {
   restaurant: RestaurantCardType;
