@@ -8,7 +8,13 @@ import fullStar from "../../public/icons/full-star.png";
 import halfStar from "../../public/icons/half-star.png";
 import { calculateReviewRatingAverage } from "../../utils/reviews";
 
-export default function Stars({ reviews, rating }: { reviews: Review[], rating?: number }) {
+export default function Stars({
+  reviews,
+  rating,
+}: {
+  reviews: Review[];
+  rating?: number;
+}) {
   const reviewRating = rating || calculateReviewRatingAverage(reviews);
 
   const renderStars = () => {
@@ -25,7 +31,9 @@ export default function Stars({ reviews, rating }: { reviews: Review[], rating?:
       } else stars.push(emptyStar);
     }
 
-    return stars.map((star) => <Image alt="" src={star} width={15} height={15} />);
+    return stars.map((star, index) => (
+      <Image key={index} alt="" src={star} width={15} height={15} />
+    ));
   };
 
   return <div className="flex items-center">{renderStars()}</div>;
