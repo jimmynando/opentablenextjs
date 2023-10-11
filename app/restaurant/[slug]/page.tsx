@@ -6,6 +6,7 @@ import Images from "./components/Images";
 import Reviews from "./components/Reviews";
 import ReservationCard from "./components/ReservationCard";
 import { PrismaClient, Review } from "@prisma/client";
+import { notFound } from "next/navigation";
 
 export interface Restaurant {
   id: number;
@@ -28,7 +29,7 @@ const fetchRestaurantBySlug = async (
       description: true,
       images: true,
       slug: true,
-      reviews: true
+      reviews: true,
     },
     where: {
       slug: slug,
@@ -36,7 +37,7 @@ const fetchRestaurantBySlug = async (
   });
 
   if (!restaurant) {
-    throw new Error();
+    notFound();
   }
 
   return restaurant;
@@ -56,8 +57,8 @@ const RestaurantDetails = async ({
           <RestaurantNavBar slug={restaurant.slug} />
           <Title name={restaurant.name} />
           <Rating reviews={restaurant.reviews} />
-          <Description description={restaurant.description}/>
-          <Images images={restaurant.images}/>
+          <Description description={restaurant.description} />
+          <Images images={restaurant.images} />
           <Reviews reviews={restaurant.reviews} />
         </div>
         <div className="w-[27%] relative text-reg">
