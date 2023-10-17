@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import validator from "validator";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import * as jose from "jose";
 
 export default async function handler(
   req: NextApiRequest,
@@ -76,6 +77,15 @@ export default async function handler(
       },
     });
 
-    res.status(200).json({ messsage: "User has been created", user });
+    const alg = "HS256";
+
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+    const token = await new jose.SignJWT({ email: user.email })
+      .setProtectedHeader({ alg })
+      .setExpirationTime("24h")
+      .sign(secret);
+
+    res.status(200).json({ messsage: "User has been created", user, token });
   }
 }
