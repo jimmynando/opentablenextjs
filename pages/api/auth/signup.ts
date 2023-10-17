@@ -2,7 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import validator from "validator";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import * as jose from "jose";
+import { generateToken } from "./util";
+
+const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,8 +14,6 @@ export default async function handler(
     const {
       body: { firstName, lastName, email, phone, city, password },
     } = req;
-
-    const prisma = new PrismaClient();
 
     const errors: string[] = [];
 
@@ -54,8 +54,8 @@ export default async function handler(
       return res.status(400).json({ errorMessage: errors[0] });
     }
 
-    const userWithEmail = await prisma.user.findFirst({
-      where: { email: email },
+    const userWithEmail = await prisma.user.findUnique({
+      where: { email },
     });
 
     if (userWithEmail) {
@@ -77,15 +77,10 @@ export default async function handler(
       },
     });
 
-    const alg = "HS256";
+    const token = await generateToken(user.email);
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-    const token = await new jose.SignJWT({ email: user.email })
-      .setProtectedHeader({ alg })
-      .setExpirationTime("24h")
-      .sign(secret);
-
-    res.status(200).json({ messsage: "User has been created", user, token });
+    return res
+      .status(200)
+      .json({ messsage: "User has been created", user, token });
   }
 }
