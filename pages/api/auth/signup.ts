@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import validator from "validator";
+import { PrismaClient } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,6 +10,8 @@ export default async function handler(
     const {
       body: { firstName, lastName, email, phone, city, password },
     } = req;
+
+    const prisma = new PrismaClient();
 
     const errors: string[] = [];
 
@@ -47,6 +50,16 @@ export default async function handler(
 
     if (errors.length) {
       return res.status(400).json({ errorMessage: errors[0] });
+    }
+
+    const userWithEmail = await prisma.user.findFirst({
+      where: { email: email },
+    });
+
+    if (userWithEmail) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Email is associated with another account" });
     }
 
     res.status(200).json({ messsage: "sign up succeed" });
