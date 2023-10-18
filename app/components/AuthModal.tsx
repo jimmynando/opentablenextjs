@@ -1,13 +1,12 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 import * as constants from "./constants";
 import AuthForm from "./AuthForm";
+import useAuth from "../../hooks/useAuth";
 
 const style = {
   position: "absolute" as "absolute",
@@ -22,6 +21,7 @@ const style = {
 
 export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
   const [open, setOpen] = useState(false);
+  const { signin, signup } = useAuth();
   const [inputs, setInputs] = useState({
     firstName: "",
     lastName: "",
@@ -30,6 +30,29 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
     city: "",
     password: "",
   });
+
+  const [disabled, setDisabled] = useState(true);
+
+  useEffect(() => {
+    if (isSignIn) {
+      if (inputs.email && inputs.password) {
+        return setDisabled(false);
+      }
+    } else {
+      if (
+        inputs.firstName &&
+        inputs.lastName &&
+        inputs.city &&
+        inputs.phone &&
+        inputs.email &&
+        inputs.password
+      ) {
+        return setDisabled(false);
+      }
+    }
+
+    setDisabled(true);
+  }, [inputs]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,11 +64,13 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
     return isSignIn ? signinContent : signupContent;
   };
 
-  const handleSubmit = () => {}
+  const handleClick = () => {
+    if (isSignIn) {
+      signin({ email: inputs.email, password: inputs.password });
+    }
+  };
 
-  const handleChangeInput = (
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInputs((state) => ({ ...state, [e.target.name]: e.target.value }));
   };
 
@@ -83,8 +108,16 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
               <h2 className="text-2xl font-light text-center">
                 {renderContent(constants.SIGN_IN_TEXT, constants.SIGN_UP_TEXT)}
               </h2>
-              <AuthForm inputs={inputs} handleChangeInput={handleChangeInput} isSignIn={isSignIn} />
-              <button className="uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400">
+              <AuthForm
+                inputs={inputs}
+                handleChangeInput={handleChangeInput}
+                isSignIn={isSignIn}
+              />
+              <button
+                onClick={handleClick}
+                className="uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400"
+                disabled={disabled}
+              >
                 {renderContent(
                   constants.SIGN_IN_TITLE,
                   constants.SIGN_UP_TITLE
