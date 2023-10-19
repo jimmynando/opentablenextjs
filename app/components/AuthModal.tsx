@@ -9,7 +9,7 @@ import AuthForm from "./AuthForm";
 import useAuth from "../../hooks/useAuth";
 import { useContext } from "react";
 import { AuthenticationContext } from "../context/AuthContext";
-import { CircularProgress } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
 
 const style = {
   position: "absolute" as "absolute",
@@ -22,20 +22,22 @@ const style = {
   p: 4,
 };
 
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  city: "",
+  password: "",
+};
+
 export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
   const { error, loading, data, setAuthState } = useContext(
     AuthenticationContext
   );
   const [open, setOpen] = useState(false);
   const { signin, signup } = useAuth();
-  const [inputs, setInputs] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    city: "",
-    password: "",
-  });
+  const [inputs, setInputs] = useState(initialState);
 
   const [disabled, setDisabled] = useState(true);
 
@@ -61,7 +63,11 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
   }, [inputs]);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setInputs(initialState);
+    setAuthState({ error: null, data: null, loading: false });
+    setOpen(false);
+  };
 
   const renderContent = (
     signinContent: string | React.ReactNode,
@@ -72,7 +78,9 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
 
   const handleClick = () => {
     if (isSignIn) {
-      signin({ email: inputs.email, password: inputs.password });
+      signin({ email: inputs.email, password: inputs.password }, handleClose);
+    } else {
+      signup(inputs, handleClose);
     }
   };
 
@@ -107,6 +115,11 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
             </div>
           ) : (
             <div className="p-2 h-[500px]">
+              {error ? (
+                <Alert severity="error" className="mb-4">
+                  {error}
+                </Alert>
+              ) : null}
               <div className="uppercase font-bold text-center pb-2 border-b mb-2">
                 <p className="text-sm">
                   {renderContent(
