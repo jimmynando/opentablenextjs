@@ -7,6 +7,9 @@ import Modal from "@mui/material/Modal";
 import * as constants from "./constants";
 import AuthForm from "./AuthForm";
 import useAuth from "../../hooks/useAuth";
+import { useContext } from "react";
+import { AuthenticationContext } from "../context/AuthContext";
+import { CircularProgress } from "@mui/material";
 
 const style = {
   position: "absolute" as "absolute",
@@ -20,6 +23,9 @@ const style = {
 };
 
 export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
+  const { error, loading, data, setAuthState } = useContext(
+    AuthenticationContext
+  );
   const [open, setOpen] = useState(false);
   const { signin, signup } = useAuth();
   const [inputs, setInputs] = useState({
@@ -95,36 +101,45 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div className="p-2 h-[500px]">
-            <div className="uppercase font-bold text-center pb-2 border-b mb-2">
-              <p className="text-small">
-                {renderContent(
-                  constants.SIGN_IN_TITLE,
-                  constants.SIGN_UP_TITLE
-                )}
-              </p>
+          {loading ? (
+            <div className="py-24 px-2 h-[500px] flex justify-center">
+              <CircularProgress />
             </div>
-            <div className="m-auto">
-              <h2 className="text-2xl font-light text-center">
-                {renderContent(constants.SIGN_IN_TEXT, constants.SIGN_UP_TEXT)}
-              </h2>
-              <AuthForm
-                inputs={inputs}
-                handleChangeInput={handleChangeInput}
-                isSignIn={isSignIn}
-              />
-              <button
-                onClick={handleClick}
-                className="uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400"
-                disabled={disabled}
-              >
-                {renderContent(
-                  constants.SIGN_IN_TITLE,
-                  constants.SIGN_UP_TITLE
-                )}
-              </button>
+          ) : (
+            <div className="p-2 h-[500px]">
+              <div className="uppercase font-bold text-center pb-2 border-b mb-2">
+                <p className="text-sm">
+                  {renderContent(
+                    constants.SIGN_IN_TITLE,
+                    constants.SIGN_UP_TITLE
+                  )}
+                </p>
+              </div>
+              <div className="m-auto">
+                <h2 className="text-2xl font-light text-center">
+                  {renderContent(
+                    constants.SIGN_IN_TEXT,
+                    constants.SIGN_UP_TEXT
+                  )}
+                </h2>
+                <AuthForm
+                  inputs={inputs}
+                  handleChangeInput={handleChangeInput}
+                  isSignIn={isSignIn}
+                />
+                <button
+                  onClick={handleClick}
+                  className="uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400"
+                  disabled={disabled}
+                >
+                  {renderContent(
+                    constants.SIGN_IN_TITLE,
+                    constants.SIGN_UP_TITLE
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </Box>
       </Modal>
     </div>
