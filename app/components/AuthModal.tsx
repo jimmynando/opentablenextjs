@@ -125,9 +125,6 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
                     constants.SIGN_UP_TITLE
                   )}
                 </p>
-                <p>
-                  {data?.firstName} {data?.lastName}
-                </p>
               </div>
               <div className="m-auto">
                 <h2 className="text-2xl font-light text-center">
