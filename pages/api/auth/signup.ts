@@ -82,8 +82,6 @@ export default async function handler(
 
     setCookie("jwt", token, { req, res, maxAge: 60 * 6 * 24 });
 
-    console.log(user);
-
     return res
       .status(200)
       .json({

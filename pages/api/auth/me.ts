@@ -29,5 +29,16 @@ export default async function handler(
     where: { email: payload.email },
   });
 
-  return res.json({ me: user });
+  if (!user) {
+    return res.status(401).json({ errorMessage: "Unauthorized request" });
+  }
+
+  return res.json({
+    id: user.id,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    email: user.email,
+    phone: user.phone,
+    city: user.city
+  });
 }

@@ -5,7 +5,6 @@ import Image from "next/image";
 import errorMascot from "../../public/icons/error.png";
 
 export default function Error({ error }: { error: Error }) {
-  console.log(error);
   return (
     <div className="h-screen bg-gray-200 flex flex-col justify-center items-center">
       <Image src={errorMascot} alt="Error" className="w-56 mb-8" />

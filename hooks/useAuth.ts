@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext } from "react";
 
 import { AuthenticationContext } from "../app/context/AuthContext";
+import { getCookie } from "cookies-next";
 
 interface User {
   firstName: string;
@@ -36,7 +37,7 @@ const useAuth = () => {
       });
 
       authCtx.setAuthState({
-        ...authCtx,
+        error: null,
         data: response.data,
         loading: false,
       });

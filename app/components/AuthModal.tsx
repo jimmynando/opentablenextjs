@@ -64,8 +64,6 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setInputs(initialState);
-    setAuthState({ error: null, data: null, loading: false });
     setOpen(false);
   };
 
@@ -126,6 +124,9 @@ export default function AuthModal({ isSignIn }: { isSignIn: boolean }) {
                     constants.SIGN_IN_TITLE,
                     constants.SIGN_UP_TITLE
                   )}
+                </p>
+                <p>
+                  {data?.firstName} {data?.lastName}
                 </p>
               </div>
               <div className="m-auto">
