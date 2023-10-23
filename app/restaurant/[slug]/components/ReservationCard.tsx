@@ -38,8 +38,10 @@ export default function ReservationCard({
       <div className="my-3 flex flex-col">
         <label htmlFor="">Party size</label>
         <select name="" className="py-3 border-b font-light" id="">
-          {partySize.map((size) => (
-            <option value={size.value}>{size.label}</option>
+          {partySize.map((size, index) => (
+            <option key={index} value={size.value}>
+              {size.label}
+            </option>
           ))}
         </select>
       </div>
@@ -57,9 +59,13 @@ export default function ReservationCard({
         <div className="flex flex-col w-[48%]">
           <label htmlFor="">Time</label>
           <select name="" id="" className="py-3 border-b font-light">
-            {filterTimeByRestaurantOpenWindow().map(({ time, displayTime }) => (
-              <option value={time}>{displayTime}</option>
-            ))}
+            {filterTimeByRestaurantOpenWindow().map(
+              ({ time, displayTime }, index) => (
+                <option key={index} value={time}>
+                  {displayTime}
+                </option>
+              )
+            )}
           </select>
         </div>
       </div>
