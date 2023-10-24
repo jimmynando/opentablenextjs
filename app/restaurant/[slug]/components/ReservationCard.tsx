@@ -5,6 +5,9 @@ import { useState } from "react";
 import { partySize as partySizes, times } from "../../../../data";
 import DatePicker from "react-datepicker";
 import useAvailability from "../../../../hooks/useAvailability";
+import { CircularProgress } from "@mui/material";
+import Link from "next/link";
+import { Time, convertToDisplayTime } from "../../../../utils/time";
 
 export default function ReservationCard({
   openTime,
@@ -104,10 +107,39 @@ export default function ReservationCard({
         <button
           onClick={handleClick}
           className="bg-red-600 rounded w-full px-4 text-white font-bold h-16"
+          disabled={loading}
         >
-          Find a Time
+          {loading ? <CircularProgress color="inherit" /> : "Find a Time"}
         </button>
       </div>
+      {data && data.length ? (
+        <div className="mt-4">
+          <p className="text-reg">Select a time</p>
+          <div className="flex flex-wrap">
+            {data.map((t, index) => {
+              return t.available ? (
+                <Link
+                  key={index}
+                  href={{
+                    pathname: `/reserve/${slug}`,
+                    query: {
+                      date: `${day}T${t.time}`,
+                      partySize,
+                    },
+                  }}
+                  className="bg-red-600 cursor-pointer p-2 w-24 text-center text-white mb-3 mr-3 rounded"
+                >
+                  <p className="text-sm font-bold">
+                    {convertToDisplayTime(t.time as Time)}
+                  </p>
+                </Link>
+              ) : (
+                <p className="bg-gray-300 p-2 w-24 mb-3 mr-3 rounded"></p>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
