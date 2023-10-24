@@ -66,7 +66,11 @@ const RestaurantDetails = async ({
           <Reviews reviews={restaurant.reviews} />
         </div>
         <div className="w-[27%] relative text-reg">
-          <ReservationCard openTime={restaurant.open_time} closeTime={restaurant.close_time} />
+          <ReservationCard
+            slug={restaurant.slug}
+            openTime={restaurant.open_time}
+            closeTime={restaurant.close_time}
+          />
         </div>
       </>
     );

@@ -42,17 +42,17 @@ export default async function handler(
     },
   });
 
-  const bookingsCompressed = bookings.map((booking) => ({
-    [booking.booking_time.toISOString()]: booking.tables.reduce(
-      (obj, table) => {
+  const bookingsWithTables: { [key: string]: { [key: number]: true } } = {};
+
+  bookings.forEach((booking) => {
+    bookingsWithTables[booking.booking_time.toISOString()] =
+      booking.tables.reduce((obj, table) => {
         return {
           ...obj,
           [table.table_id]: true,
         };
-      },
-      {}
-    ),
-  }));
+      }, {});
+  });
 
   const restaurant = await prisma.restaurant.findUnique({
     where: {
@@ -60,6 +60,8 @@ export default async function handler(
     },
     select: {
       tables: true,
+      open_time: true,
+      close_time: true,
     },
   });
 
@@ -77,9 +79,38 @@ export default async function handler(
     };
   });
 
-  return res
-    .status(200)
-    .json({ searchTimes, bookingsCompressed, tables, searchTimesWithTables });
+  searchTimesWithTables.forEach((t) => {
+    t.tables = t.tables.filter((table) => {
+      if (bookingsWithTables[t.date.toISOString()]) {
+        if (bookingsWithTables[t.date.toISOString()][table.id]) return false;
+      }
+      return true;
+    });
+  });
+
+  const availabilities = searchTimesWithTables
+    .map((t) => {
+      const sumSeats = t.tables.reduce((sum, table) => {
+        return sum + table.number_of_seats;
+      }, 0);
+
+      return {
+        time: t.time,
+        available: sumSeats >= parseInt(partySize),
+      };
+    })
+    .filter((availability) => {
+      const timeIsAfterOpeningHour =
+        new Date(`${day}T${availability.time}`) >=
+        new Date(`${day}T${restaurant.open_time}`);
+      const timeIsBeforeClosingHour =
+        new Date(`${day}T${availability.time}`) <=
+        new Date(`${day}T${restaurant.close_time}`);
+
+      return timeIsAfterOpeningHour && timeIsBeforeClosingHour;
+    });
+
+  return res.status(200).json({ availabilities });
 }
 
 //http://localhost:3000/api/restaurant/vivaan-fine-indian-cuisine-ottawa/availability?day=2023-05-27&time=02:00:00.000Z&partySize=4
